@@ -41,6 +41,7 @@ Declarative VS Code profile management using base profile + role deltas, with Ma
 - `profiles/<role>/` — Role-specific deltas
     - `extensions.delta.txt` — Additional extensions for this role
     - `settings.delta.jsonc` — Role-specific settings (JSONC, comments allowed, merged with base)
+    - `keybindings.delta.jsonc` — Role-specific keybindings (optional, replaces base if provided)
 - `profiles/python/` — Python data science profile (example role)
     - Includes: Ruff, uv, marimo, Jupyter extensions
     - Settings: Python inlay hints, pytest, notebook configurations
@@ -50,15 +51,19 @@ Declarative VS Code profile management using base profile + role deltas, with Ma
     - `local/` — Local output directory (gitignored)
 - `scripts/` — Build utilities
     - `jsonc_merge.py` — Deep merge JSONC files (PEP 727 compliant)
+    - `filter_extensions.py` — Filter and merge extension list files (ignore comments/blank lines)
+    - `merge_keybindings.py` — Merge base keybindings with role-specific delta
 - `.build/` — Generated profile definitions (gitignored)
 
 ## Make Targets
 
 - `make` or `make help` — Show usage help
 - `make base` — Generate base profile definitions
-- `make role role=<name>` — Generate role profile definitions (base + delta merged)
-- `make all` — Generate all profile definitions
-- `make install-extensions profile=<name>` — Install extensions for current session
+- `make role role=python` (or any role name) — Generate role profile definitions (base + delta merged)
+    - Required parameter: `role=<name>` must be specified explicitly
+- `make all` — Generate all profile definitions for base and all roles
+- `make install-extensions profile=python` (or any profile name) — Install extensions for current session
+    - Required parameter: `profile=<name>` must be specified explicitly
 - `make clean` — Remove build artifacts
 
 ## Design Principles
@@ -144,13 +149,18 @@ Tip: Keep local-only changes out of Git to preserve portability.
 - One extension ID per line (format: `publisher.extension`)
 - Base extensions include common tools; role extensions add specialized functionality
 
-### Settings Merge
+### Settings & Keybindings Merge
 
-- Settings are defined as JSONC; comments are allowed in `*.jsonc`
-- Merge is done via `scripts/jsonc_merge.py` (PEP 727 compliant with type annotations)
-- Delta overwrites base; arrays are replaced (not merged)
-- Output JSON is emitted to `.build/<name>-settings.json`
-- Keybindings are managed separately in `keybindings.jsonc` (not merged with deltas)
+- **Settings**: Defined as JSONC; comments are allowed in `*.jsonc`
+    - Merge is done via `scripts/jsonc_merge.py` (PEP 727 compliant with type annotations)
+    - Delta overwrites base; arrays are replaced (not merged)
+    - Output JSON is emitted to `.build/<name>-settings.json`
+- **Keybindings**: Managed separately in `keybindings.jsonc` files
+    - Base keybindings: `profiles/base/keybindings.jsonc`
+    - Role-specific keybindings (optional): `profiles/<role>/keybindings.delta.jsonc`
+    - Merge is done via `scripts/merge_keybindings.py`
+    - If role has `keybindings.delta.jsonc`, it replaces base keybindings; otherwise base keybindings are used
+    - Output JSON is emitted to `.build/<name>-keybindings.json`
 
 ### Color Themes
 
