@@ -1,0 +1,30 @@
+{
+	// Ruff as default formatter and fixer
+	"[python]": {
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.ruff": "explicit",
+			"source.organizeImports.ruff": "explicit"
+		}
+	},
+
+	// Pytest defaults
+	"python.testing.pytestEnabled": true,
+	"python.testing.pytestArgs": ["tests"],
+
+	// Jupyter / notebook ergonomics
+	"jupyter.notebookFileRoot": "${workspaceFolder}",
+	"jupyter.interactiveWindow.mode": "multiple",
+	"jupyter.themeMatplotlibPlots": true,
+
+	// Type checking balance
+	"python.analysis.typeCheckingMode": "basic",
+
+	// Inlay hints
+	"python.analysis.inlayHints.variableTypes": true,
+	"python.analysis.inlayHints.parameterNames": "all",
+	"python.analysis.inlayHints.returnTypes": true,
+	"python.analysis.inlayHints.callArgumentNames": true,
+	"python.analysis.inlayHints.functionReturnTypes": true
+}

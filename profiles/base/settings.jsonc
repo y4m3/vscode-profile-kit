@@ -1,0 +1,292 @@
+{
+  // Remote: prefer extension-provided port forwarding for devcontainers/SSH
+  "remote.autoForwardPortsSource": "hybrid",
+
+  // Editor basics
+  "editor.cursorStyle": "block",
+  "editor.formatOnType": true,
+  "editor.guides.bracketPairs": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.language.colorizedBracketPairs": [
+    ["‘", "’"],
+    ["“", "”"],
+    ["(", ")"],
+    ["（", "）"],
+    ["｟", "｠"],
+    ["[", "]"],
+    ["［", "］"],
+    ["〚", "〛"],
+    ["〔", "〕"],
+    ["{", "}"],
+    ["｛", "｝"],
+    ["〈", "〉"],
+    ["《", "》"],
+    ["「", "」"],
+    ["『", "』"],
+    ["【", "】"],
+    ["〖", "〗"],
+    ["〝", "〟"]
+  ],
+  // Allow full-width punctuation and specific symbols to avoid noisy highlights
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.nonBasicASCII": false,
+  "editor.unicodeHighlight.allowedCharacters": {
+    "゠": true,
+    "，": true,
+    "；": true,
+    "：": true,
+    "！": true,
+    "？": true,
+    "．": true,
+    "‘": true,
+    "’": true,
+    "（": true,
+    "）": true,
+    "［": true,
+    "］": true,
+    "｛": true,
+    "｝": true,
+    "〔": true,
+    "〕": true,
+    "＜": true,
+    "＞": true,
+    "ノ": true
+  },
+  // Reduce watcher load for common noisy folders
+  "files.watcherExclude": {
+    "**/.cache/**": true,
+    "**/.devcontainer/**": true,
+    "**/.git/**": true
+  },
+  // Viewing preferences
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "editor.rulers": [88, 120],
+  "editor.lineNumbers": "relative",
+  "editor.fontSize": 14,
+  "terminal.integrated.fontSize": 16,
+  "editor.fontLigatures": true,
+
+  // Workbench layout and color tweaks
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "workbench.editor.openPositioning": "last",
+  "workbench.colorTheme": "Section 9",
+  "workbench.iconTheme": "vscode-icontheme-nomo-dark",
+  "workbench.colorCustomizations": {
+    "editorIndentGuide.background1": "#3E5F8A",
+    "editorIndentGuide.background2": "#7D6B7D",
+    "editorIndentGuide.background3": "#A67F5D",
+    "editorIndentGuide.background4": "#6B8E23",
+    "editorIndentGuide.background5": "#4682B4",
+    "editorIndentGuide.background6": "#8A2BE2",
+    "editorIndentGuide.activeBackground1": "#F0F8FF",
+    "editorIndentGuide.activeBackground2": "#FFF0F5",
+    "editorIndentGuide.activeBackground3": "#FAFAD2",
+    "editorIndentGuide.activeBackground4": "#F0FFF0",
+    "editorIndentGuide.activeBackground5": "#F0F8FF",
+    "editorIndentGuide.activeBackground6": "#E6E6FA"
+  },
+
+  // Vim integration: basic settings
+  "vim.leader": "<space>",
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.incsearch": true,
+  "vim.hlsearch": true,
+  "vim.smartcase": true,
+  "vim.showcmd": true,
+  "vim.showmodename": true,
+
+  // Vim key remappings (insert mode)
+  "vim.insertModeKeyBindings": [
+    // Use jj to exit insert mode
+    {
+      "before": ["j", "j"],
+      "after": ["<Esc>"]
+    },
+    // Use jk to exit insert mode
+    {
+      "before": ["j", "k"],
+      "after": ["<Esc>"]
+    }
+  ],
+
+  "vim.normalModeKeyBindings": [
+    // Window splits (Vim-style, leader-prefixed)
+    {
+      "before": ["<leader>", "-"],
+      "commands": ["workbench.action.splitEditor"]
+    },
+    {
+      "before": ["<leader>", "\\"],
+      "commands": ["workbench.action.splitEditorOrthogonal"]
+    },
+    // Code navigation (Vim-style): gp/gr
+    {
+      "before": ["g", "p"],
+      "commands": ["editor.action.peekDefinition"]
+    },
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.peekReferences"]
+    },
+    // Accelerated up/down cursor movement
+    {
+      "before": ["j"],
+      "commands": ["accelerated.cursorDown"]
+    },
+    {
+      "before": ["k"],
+      "commands": ["accelerated.cursorUp"]
+    }
+  ],
+
+  // Vim key remappings (normal mode, non-recursive)
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // Clear search highlights
+    {
+      "before": ["<C-n>"],
+      "commands": [":nohl"]
+    },
+    // Window navigation with Ctrl+hjkl
+    {
+      "before": ["<C-h>"],
+      "commands": ["workbench.action.focusLeftGroup"]
+    },
+    {
+      "before": ["<C-j>"],
+      "commands": ["workbench.action.focusBelowGroup"]
+    },
+    {
+      "before": ["<C-k>"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["<C-l>"],
+      "commands": ["workbench.action.focusRightGroup"]
+    },
+    // Easymotion: s for 2-character search (nmap s <Plug>(easymotion-s2))
+    {
+      "before": ["s"],
+      "after": ["<leader>", "<leader>", "2", "s"]
+    }
+  ],
+
+  // Vim emulated plugins: surround, easymotion, sneak
+  "vim.surround": true,
+  "vim.easymotion": true,
+  "vim.sneak": false,
+  "vim.replaceWithRegister": false,
+  
+  // Vim inccommand for live preview of substitutions
+  "vim.inccommand": "replace",
+  
+  // Status bar color based on mode
+  "vim.statusBarColorControl": false,
+  "vim.statusBarColors.normal": ["#8FBCBB", "#434C5E"],
+  "vim.statusBarColors.insert": "#BF616A",
+  "vim.statusBarColors.visual": "#B48EAD",
+  "vim.statusBarColors.visualline": "#B48EAD",
+  "vim.statusBarColors.visualblock": "#A3BE8C",
+  "vim.statusBarColors.replace": "#D08770",
+
+  // Copilot
+  "github.copilot.chat.localeOverride": "ja",
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": false
+  },
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.chat.githubMcpServer.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  // Markdown authoring
+  "[markdown]": {
+    "editor.tabSize": 4,
+    "editor.quickSuggestions": {
+      "other": "on",
+      "comments": "on",
+      "strings": "on"
+    },
+    "editor.snippetSuggestions": "top",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.wordWrap": "bounded",
+    "editor.wordBreak": "keepAll",
+    "editor.wordWrapColumn": 120
+  },
+  "markdownlint.config": {
+    "single-title": { "front_matter_title": "" },
+    "MD007": { "indent": 4 },
+    "MD013": false,
+    "MD024": { "siblings_only": true },
+    "MD033": false,
+    "MD034": false
+  },
+  "markdown.extension.toc.levels": "2..6",
+  "markdown.extension.list.indentationSize": "inherit",
+
+  // Spell checking
+  "cSpell.customDictionaries": {
+    "myWords": {
+      "name": "myWords",
+      "path": "~/.my-words.txt",
+      "scope": "user",
+      "addWords": true
+    },
+    "custom": true
+  },
+
+  // Better Comments highlighting
+  "better-comments.tags": [
+    {
+      "tag": "!",
+      "color": "#FF2D00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "?",
+      "color": "#3498DB",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "//",
+      "color": "#474747",
+      "strikethrough": true,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "todo",
+      "color": "#FF8C00",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    },
+    {
+      "tag": "*",
+      "color": "#98C379",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ]
+}

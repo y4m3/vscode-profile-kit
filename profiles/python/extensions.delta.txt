@@ -1,0 +1,12 @@
+# Additional extensions for the python role.
+
+# Lint/format
+charliermarsh.ruff
+
+# Data science / notebooks
+marimo-team.vscode-marimo
+ms-toolsai.python-ds-extension-pack
+ms-toolsai.jupyter-renderers
+
+# Build & env
+astral-sh.uv

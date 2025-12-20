@@ -1,0 +1,21 @@
+// Color Theme Template (JSONC)
+// Purpose: Specify color themes per profile for consistent visual identity
+// Usage: Copy the workbench.colorTheme setting into your profile's settings.delta.jsonc
+//
+// This file provides examples of popular color themes.
+// Install the theme extension first, then apply the theme name.
+{
+  // ===== Built-in Themes (no extension needed) =====
+  // "workbench.colorTheme": "Default Dark Modern",
+  // "workbench.colorTheme": "Default Light Modern",
+  // "workbench.colorTheme": "Dark+ (default dark)",
+  // "workbench.colorTheme": "Light+ (default light)",
+  // "workbench.colorTheme": "Monokai",
+
+  // ===== Section 9 Themes =====
+  // "workbench.colorTheme": "Section 9",
+  // "workbench.colorTheme": "Section 9 - Automaton",
+  // "workbench.colorTheme": "Section 9 - Hacker",
+  // "workbench.colorTheme": "Section 9 - Major",
+  // "workbench.colorTheme": "Section 9 - Ranger",
+}

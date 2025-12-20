@@ -1,0 +1,43 @@
+# List VS Code extension IDs required for all profiles.
+
+# Editor & Keyboard Navigation
+vscodevim.vim
+ypresto.vscode-accelerated
+christian-kohler.path-intellisense
+EditorConfig.EditorConfig
+
+# AI & Copilot
+github.copilot
+github.copilot-chat
+
+# Markdown
+davidanson.vscode-markdownlint
+shd101wyy.markdown-preview-enhanced
+yzhang.markdown-all-in-one
+
+# Git & Source Control
+donjayamanne.githistory
+
+# Project & Task Management
+alefragnani.project-manager
+gruntfuggly.todo-tree
+wayou.vscode-todo-highlight
+
+# Code Quality & Diagnostics
+usernamehw.errorlens
+streetsidesoftware.code-spell-checker
+aaron-bond.better-comments
+
+# Build & Development Tools
+ms-vscode.makefile-tools
+ms-vscode-remote.vscode-remote-extensionpack
+ms-azuretools.vscode-docker
+
+# Data & Utilities
+mechatroner.rainbow-csv
+davidhouchin.whitespace-plus
+anseki.vscode-color
+
+# Appearance & Themes
+y4m3.section9-theme
+be5invis.vscode-icontheme-nomo-dark

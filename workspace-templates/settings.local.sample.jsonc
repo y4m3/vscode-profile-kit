@@ -1,0 +1,43 @@
+// Local-only settings template (JSONC)
+// Purpose: Developer-experience adjustments that vary by machine
+// Copy selected lines into your VS Code User settings (local window)
+// This file is tracked (template). Do NOT commit your personal overrides.
+{
+  // ===== Editor fonts =====
+  // Windows examples:
+  // "editor.fontFamily": "'UDEV Gothic 35NFLG', 'Cascadia Code', 'Consolas'",
+  // macOS examples:
+  // "editor.fontFamily": "'SF Mono', 'JetBrains Mono', 'Menlo'",
+  // Linux examples:
+  // "editor.fontFamily": "'UDEV Gothic 35NFLG', 'Noto Sans JP', 'DejaVu Sans Mono'",
+  // Generic fallback:
+  // "editor.fontFamily": "'UDEV Gothic 35NFLG'",
+  
+  // Ligatures and editor appearance
+  // "editor.fontLigatures": true,
+  // "editor.fontSize": 14,
+  // "editor.codeLensFontFamily": "'UDEV Gothic 35NFLG'",
+
+  // ===== Terminal/Console/Notebook fonts =====
+  // "terminal.integrated.fontFamily": "'UDEV Gothic 35NFLG'",
+  // "terminal.integrated.fontSize": 16,
+  // "debug.console.fontFamily": "'UDEV Gothic NFLG'",
+  // "editor.codeLensFontFamily": "'UDEV Gothic 35NFLG'",
+  // "notebook.output.fontFamily": "'UDEV Gothic 35NFLG'",
+
+  // ===== UI scale & layout (optional) =====
+  // Global zoom factor (1.0 = 100%)
+  // "window.zoomLevel": 0,
+  // Cursor style preferences
+  // "editor.cursorStyle": "block",
+  // "editor.cursorBlinking": "blink",
+
+  // ===== Language-specific overrides (examples) =====
+  // "[markdown]": {
+  //   "editor.fontFamily": "'UDEV Gothic 35NFLG'",
+  //   "editor.fontLigatures": false
+  // },
+  // "[python]": {
+  //   "editor.fontSize": 14
+  // }
+}

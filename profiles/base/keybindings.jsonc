@@ -1,0 +1,204 @@
+// VS Code Keybindings for vscode-profile-kit
+// This file contains:
+// 1. Complex key combinations not supported by vim.insertModeKeyBindings/vim.normalModeKeyBindings
+// 2. Non-Vim VS Code operations (terminal, panel, file explorer)
+// 3. Overrides for standard VS Code behavior
+//
+// Note: vim.*.KeyBindings handle:
+// - Simple key sequences (e.g., jj, <leader>w)
+// - Vim mode context (insert/normal/visual)
+// - Vim motions and operations
+// Vim-mode mappings live in profiles/base/settings.jsonc (vim.*KeyBindings).
+//
+// keybindings.json handles:
+// - Complex combinations (Alt+key, Ctrl+Shift+key)
+// - Multi-mode scenarios
+// - VS Code-specific commands requiring special context
+
+[
+  // ====================
+  // TERMINAL AND PANEL OPERATIONS
+  // ====================
+
+  // Toggle terminal/panel with Ctrl+Space Ctrl+Space
+  {
+    "key": "ctrl+space ctrl+space",
+    "command": "workbench.action.togglePanel"
+  },
+
+  // Focus terminal from editor
+  {
+    "key": "alt+t",
+    "command": "workbench.action.terminal.focus",
+    "when": "!terminalFocus"
+  },
+
+  // Panel focus shortcuts with Ctrl+Space prefix
+  // Ctrl+Space O: Output panel
+  {
+    "key": "ctrl+space ctrl+o",
+    "command": "workbench.panel.output.focus"
+  },
+  // Ctrl+Space P: Problems (Markers) panel
+  {
+    "key": "ctrl+space ctrl+p",
+    "command": "workbench.panel.markers.view.focus"
+  },
+  // Ctrl+Space T: Terminal panel
+  {
+    "key": "ctrl+space ctrl+t",
+    "command": "workbench.action.terminal.focus"
+  },
+  // Ctrl+Space D: Debug REPL
+  {
+    "key": "ctrl+space ctrl+d",
+    "command": "workbench.debug.action.focusRepl"
+  },
+
+  // Terminal management with Ctrl+Space prefix
+  // Ctrl+Space N: Open a new terminal
+  {
+    "key": "ctrl+space ctrl+n",
+    "command": "workbench.action.terminal.new"
+  },
+  // Ctrl+Space J: Switch to next terminal
+  {
+    "key": "ctrl+space ctrl+j",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  // Ctrl+Space K: Switch to previous terminal
+  {
+    "key": "ctrl+space ctrl+k",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  // Ctrl+Space X: Kill the current terminal
+  {
+    "key": "ctrl+space ctrl+x",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
+
+  // Sidebar and explorer management
+  // Ctrl+Space E: Toggle sidebar visibility
+  {
+    "key": "ctrl+space ctrl+e",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  // Ctrl+Space e: Show the explorer view
+  {
+    "key": "ctrl+space e",
+    "command": "workbench.view.explorer"
+  },
+
+  // ====================
+  // FILE EXPLORER OPERATIONS (NERDTree-style)
+  // ====================
+
+  // a: Create new file
+  {
+    "key": "a",
+    "command": "explorer.newFile",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // A: Create new folder
+  {
+    "key": "shift+a",
+    "command": "explorer.newFolder",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // m: Rename (move)
+  {
+    "key": "m",
+    "command": "renameFile",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // d: Delete
+  {
+    "key": "d",
+    "command": "explorer.delete",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // y: Copy
+  {
+    "key": "y",
+    "command": "explorer.copy",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // p: Paste
+  {
+    "key": "p",
+    "command": "explorer.paste",
+    "when": "explorerViewletFocus && !inputFocus"
+  },
+
+  // ====================
+  // INTELLISENSE AND UI NAVIGATION
+  // ====================
+
+  // Ctrl+J/K for suggest/autocomplete selection
+  {
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetVisible"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPreviousSuggestion",
+    "when": "suggestWidgetVisible"
+  },
+
+  // Ctrl+J/K for quickfix/codeaction selection
+  {
+    "key": "ctrl+j",
+    "command": "selectNextCodeAction",
+    "when": "codeActionMenuVisible"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPreviousCodeAction",
+    "when": "codeActionMenuVisible"
+  },
+
+  // Ctrl+J/K for quick pick (command palette, file picker, etc.)
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenSelectNext",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.quickOpenSelectPrevious",
+    "when": "inQuickOpen"
+  },
+
+  // Ctrl+J/K for search results navigation
+  {
+    "key": "ctrl+j",
+    "command": "search.action.focusNextSearchResult",
+    "when": "hasSearchResult"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "search.action.focusPreviousSearchResult",
+    "when": "hasSearchResult"
+  },
+
+  // Ctrl+J/K for diagnostic/error navigation
+  {
+    "key": "ctrl+j",
+    "command": "editor.action.goToNextDiagnostic",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "editor.action.goToPreviousDiagnostic",
+    "when": "editorTextFocus"
+  }
+]
