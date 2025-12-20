@@ -27,9 +27,39 @@ JSONValue = JSONScalar | list["JSONValue"] | dict[str, "JSONValue"]
 
 
 def strip_jsonc(text: Annotated[str, Doc("JSONC text (may include comments)")]) -> str:
-    """Remove // and /* */ comments and trailing commas from JSONC text."""
+    """Remove // and /* */ comments and trailing commas from JSONC text.
+    
+    Preserves // inside quoted strings by tracking string state.
+    """
+    # First remove /* */ block comments (they can't appear in strings naively)
     text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
-    text = re.sub(r"//.*", "", text)
+    
+    # Remove // line comments, but preserve them inside strings
+    result = []
+    in_string = False
+    escape_next = False
+    i = 0
+    while i < len(text):
+        char = text[i]
+        
+        # Handle string state
+        if char == '"' and not escape_next:
+            in_string = not in_string
+        
+        # Handle escape sequences
+        escape_next = (char == '\\' and not escape_next and in_string)
+        
+        # Check for comment start
+        if not in_string and i + 1 < len(text) and text[i:i+2] == '//':
+            # Skip to end of line
+            while i < len(text) and text[i] != '\n':
+                i += 1
+            continue
+        
+        result.append(char)
+        i += 1
+    
+    text = ''.join(result)
     # Remove trailing commas before } or ]
     text = re.sub(r",\s*([}\]])", r"\1", text)
     return text
@@ -63,8 +93,9 @@ def main(
     data = load_jsonc(paths[0])
     for p in paths[1:]:
         data = deep_merge(data, load_jsonc(p))
-    json.dump(data, sys.stdout, ensure_ascii=False, indent=2)
-    sys.stdout.write("\n")
+    # Write as UTF-8 to stdout.buffer to handle non-ASCII characters on Windows
+    sys.stdout.buffer.write(json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8"))
+    sys.stdout.buffer.write(b"\n")
     return 0
 
 
