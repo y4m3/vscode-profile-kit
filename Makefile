@@ -1,5 +1,6 @@
 PROFILE_DIR := profiles
 BUILD_DIR := .build
+PYTHON ?= python
 
 .DEFAULT_GOAL := help
 
@@ -25,10 +26,10 @@ help:
 
 base:
 	@echo "Generating base profile definitions..."
-	@mkdir -p $(BUILD_DIR)
-	@python3 scripts/jsonc_merge.py $(PROFILE_DIR)/base/settings.jsonc > $(BUILD_DIR)/base-settings.json
-	@python3 scripts/jsonc_merge.py $(PROFILE_DIR)/base/keybindings.jsonc > $(BUILD_DIR)/base-keybindings.json
-	@grep -v '^#' $(PROFILE_DIR)/base/extensions.txt | grep -v '^$$' > $(BUILD_DIR)/base-extensions.list
+	@$(PYTHON) -c "from pathlib import Path; Path('$(BUILD_DIR)').mkdir(parents=True, exist_ok=True)"
+	@$(PYTHON) scripts/jsonc_merge.py $(PROFILE_DIR)/base/settings.jsonc > $(BUILD_DIR)/base-settings.json
+	@$(PYTHON) scripts/jsonc_merge.py $(PROFILE_DIR)/base/keybindings.jsonc > $(BUILD_DIR)/base-keybindings.json
+	@$(PYTHON) scripts/filter_extensions.py $(BUILD_DIR)/base-extensions.list $(PROFILE_DIR)/base/extensions.txt
 	@echo ""
 	@echo "Base profile definitions generated:"
 	@echo "  Extensions: $(BUILD_DIR)/base-extensions.list"
@@ -47,15 +48,10 @@ ifndef role
 	$(error role=<name> is required)
 endif
 	@echo "Generating profile '$(role)' definitions..."
-	@mkdir -p $(BUILD_DIR)
-	@grep -v '^#' $(PROFILE_DIR)/base/extensions.txt | grep -v '^$$' > $(BUILD_DIR)/$(role)-extensions.list
-	@grep -v '^#' $(PROFILE_DIR)/$(role)/extensions.delta.txt | grep -v '^$$' >> $(BUILD_DIR)/$(role)-extensions.list
-	@python3 scripts/jsonc_merge.py $(PROFILE_DIR)/base/settings.jsonc $(PROFILE_DIR)/$(role)/settings.delta.jsonc > $(BUILD_DIR)/$(role)-settings.json
-	@if [ -f $(PROFILE_DIR)/$(role)/keybindings.delta.jsonc ]; then \
-		python3 scripts/jsonc_merge.py $(PROFILE_DIR)/base/keybindings.jsonc $(PROFILE_DIR)/$(role)/keybindings.delta.jsonc > $(BUILD_DIR)/$(role)-keybindings.json; \
-	else \
-		python3 scripts/jsonc_merge.py $(PROFILE_DIR)/base/keybindings.jsonc > $(BUILD_DIR)/$(role)-keybindings.json; \
-	fi
+	@$(PYTHON) -c "from pathlib import Path; Path('$(BUILD_DIR)').mkdir(parents=True, exist_ok=True)"
+	@$(PYTHON) scripts/filter_extensions.py $(BUILD_DIR)/$(role)-extensions.list $(PROFILE_DIR)/base/extensions.txt $(PROFILE_DIR)/$(role)/extensions.delta.txt
+	@$(PYTHON) scripts/jsonc_merge.py $(PROFILE_DIR)/base/settings.jsonc $(PROFILE_DIR)/$(role)/settings.delta.jsonc > $(BUILD_DIR)/$(role)-settings.json
+	@$(PYTHON) scripts/merge_keybindings.py $(PROFILE_DIR)/base/keybindings.jsonc $(PROFILE_DIR)/$(role)/keybindings.delta.jsonc $(BUILD_DIR)/$(role)-keybindings.json
 	@echo ""
 	@echo "Profile '$(role)' definitions generated:"
 	@echo "  Extensions: $(BUILD_DIR)/$(role)-extensions.list"
@@ -72,34 +68,23 @@ endif
 all:
 	@echo "Generating all profile definitions..."
 	@$(MAKE) base
-	@for dir in $(PROFILE_DIR)/*/; do \
-		profile=$$(basename $$dir); \
-		if [ "$$profile" != "base" ]; then \
-			echo ""; \
-			$(MAKE) role role=$$profile; \
-		fi \
-	done
+	@$(PYTHON) -c "import pathlib, subprocess; roles=[p.name for p in pathlib.Path('$(PROFILE_DIR)').iterdir() if p.is_dir() and p.name!='base']; [subprocess.run(['$(MAKE)', 'role', f'role={r}'], check=True) for r in roles]"
 	@echo ""
 	@echo "All profile definitions generated in $(BUILD_DIR)/"
 
 install-extensions:
 ifndef profile
-	$(error profile=<name> is required)
+	$(error Error: profile=<name> is required. Usage: make install-extensions profile=base)
 endif
 	@echo "Installing extensions for profile '$(profile)'..."
-	@if [ ! -f $(BUILD_DIR)/$(profile)-extensions.list ]; then \
-		echo "Error: $(BUILD_DIR)/$(profile)-extensions.list not found."; \
-		echo "Run 'make base' or 'make role role=$(profile)' first."; \
-		exit 1; \
-	fi
-	@echo "Make sure you have switched to the '$(profile)' profile in VS Code!"
-	@read -p "Press Enter to continue (Ctrl+C to cancel)..." dummy
-	@cat $(BUILD_DIR)/$(profile)-extensions.list | xargs -r -I{} code --install-extension {}
+	@$(PYTHON) -c "from pathlib import Path; import sys; p=Path('$(BUILD_DIR)/$(profile)-extensions.list'); sys.exit(0) if p.exists() else sys.exit(sys.stderr.write(f'Error: {p} not found.\\nRun \"make base\" or \"make role role=$(profile)\" first.\\n') or 1)"
+	@echo "Installing extensions for profile '$(profile)'..."
+	@$(PYTHON) -c "import pathlib, subprocess, shutil, sys; code_exe=shutil.which('code'); exts=[l.strip() for l in pathlib.Path('$(BUILD_DIR)/$(profile)-extensions.list').read_text(encoding='utf-8').splitlines() if l.strip()]; sys.exit(sys.stderr.write('Error: VS Code CLI (code) not found in PATH.\\nEnsure VS Code is installed and \"code\" command is available.\\n') or 1) if not code_exe else [subprocess.run([code_exe,'--install-extension', e, '--profile', '$(profile)'], check=False) for e in exts]"
 	@echo ""
-	@echo "Extensions installed to current VS Code profile."
-	@echo "If you need to reinstall, switch to the profile and run this command again."
+	@echo "Extensions installed to profile '$(profile)'."
+	@echo "Reload VS Code window to see the changes."
 
 clean:
 	@echo "Cleaning build artifacts..."
-	@rm -rf $(BUILD_DIR)
+	@$(PYTHON) -c "import shutil; shutil.rmtree('$(BUILD_DIR)', ignore_errors=True)"
 	@echo "Build directory cleaned."
