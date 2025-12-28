@@ -39,5 +39,6 @@ davidhouchin.whitespace-plus
 anseki.vscode-color
 
 # Appearance & Themes
+enkia.tokyo-night
 y4m3.section9-theme
 be5invis.vscode-icontheme-nomo-dark
