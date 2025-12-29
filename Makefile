@@ -4,7 +4,7 @@ PYTHON ?= python
 
 .DEFAULT_GOAL := help
 
-.PHONY: help base role all color clean install-extensions
+.PHONY: help base role all clean install-extensions
 
 help:
 	@echo "Available targets:"

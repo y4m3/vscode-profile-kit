@@ -2,20 +2,30 @@
 
 Declarative VS Code profile management using base profile + role deltas, with Make as the single interface.
 
+## Prerequisites
+
+- **Python 3.8+**: Required for running build scripts
+- **VS Code CLI**: The `code` command must be available in your PATH
+  - Install via VS Code: Open Command Palette (`Ctrl+Shift+P`) → "Shell Command: Install 'code' command in PATH"
+  - Or see [VS Code CLI documentation](https://code.visualstudio.com/docs/editor/command-line)
+- **typing_extensions** (optional): Recommended for PEP 727 compliance
+  - Install with: `pip install typing_extensions`
+  - Scripts will work without it, but with reduced type annotation support
+
 ## Quick Start
 
 1. **Generate profile definitions**
 
    ```bash
    make base              # Generate base profile
-   make role role=example # Generate example role profile
+   make role role=python  # Generate python role profile
    make all               # Generate all profiles
    ```
 
 2. **Create profile in VS Code**
    - Open Command Palette (Ctrl+Shift+P)
    - Select "Profiles: Create Profile"
-   - Name it (e.g., "base", "example")
+   - Name it (e.g., "base", "python")
 
 3. **Switch to the profile in VS Code**
    - Click profile icon in bottom-left corner
@@ -24,13 +34,16 @@ Declarative VS Code profile management using base profile + role deltas, with Ma
 4. **Install extensions**
 
    ```bash
-   make install-extensions profile=example
+   make install-extensions profile=python
    ```
 
-5. **Apply settings**
-   - Open VS Code settings (Ctrl+,)
-   - Click "Open Settings (JSON)" icon
-   - Copy content from `.build/example-settings.json`
+5. **Apply settings and keybindings**
+   - **Settings**: Open VS Code settings (Ctrl+,)
+     - Click "Open Settings (JSON)" icon
+     - Copy content from `.build/python-settings.json`
+   - **Keybindings**: Open Command Palette (`Ctrl+Shift+P`)
+     - Select "Preferences: Open Keyboard Shortcuts (JSON)"
+     - Copy content from `.build/python-keybindings.json`
 
 ## Repository Structure
 
@@ -52,7 +65,7 @@ Declarative VS Code profile management using base profile + role deltas, with Ma
 - `scripts/` — Build utilities
     - `jsonc_merge.py` — Deep merge JSONC files (PEP 727 compliant)
     - `filter_extensions.py` — Filter and merge extension list files (ignore comments/blank lines)
-    - `merge_keybindings.py` — Merge base keybindings with role-specific delta
+    - `merge_keybindings.py` — Merge base keybindings with role-specific delta (depends on `jsonc_merge.py` for `strip_jsonc` function)
 - `.build/` — Generated profile definitions (gitignored)
 
 ## Make Targets
@@ -88,6 +101,7 @@ make all
 make install-extensions profile=python
 
 # Apply settings from .build/python-settings.json
+# Apply keybindings from .build/python-keybindings.json
 ```
 
 ## Key Features
@@ -141,6 +155,27 @@ Tip: Keep local-only changes out of Git to preserve portability.
 - Requires manual profile creation/switching in UI
 - Extensions install to currently active profile only
 
+**Cursor**
+
+- Cursor cannot directly access VS Code Marketplace
+- `make install-extensions` does not work with Cursor (requires VS Code CLI)
+- **Workflow for Cursor users:**
+  1. Generate profile definitions as usual: `make base` or `make role role=python`
+  2. Create and switch to the profile in Cursor UI
+  3. For each extension in `.build/<profile>-extensions.list`:
+     - Download VSIX file using the Marketplace URL format:
+       ```
+       https://marketplace.visualstudio.com/_apis/public/gallery/publishers/{publisher}/vsextensions/{extension}/{version}/vspackage
+       ```
+     - Find the version on [Marketplace](https://marketplace.visualstudio.com/items?itemName={publisher}.{extension})
+     - Example for `y4m3.section9-theme` (version 0.0.1):
+       ```
+       https://marketplace.visualstudio.com/_apis/public/gallery/publishers/y4m3/vsextensions/section9-theme/0.0.1/vspackage
+       ```
+     - Install in Cursor: Command Palette (`Ctrl+Shift+P`) → "Extensions: Install from VSIX..." → Select the VSIX file
+  4. Apply settings and keybindings as described in Quick Start
+- Alternative: Build VSIX from source using `vsce package` if the extension repository is available
+
 ### Extension List Format
 
 - Extensions are organized by category (Editor, AI, Markdown, Git, etc.)
@@ -169,3 +204,31 @@ Use VS Code's built-in color theme system instead of workspace color customizati
 - Set `workbench.colorTheme` in your profile settings or User settings
 - Browse themes: Command Palette → "Preferences: Color Theme"
 - Install theme extensions from the Marketplace as needed
+
+## Troubleshooting
+
+### `code` command not found
+
+- **VS Code**: Install CLI via Command Palette → "Shell Command: Install 'code' command in PATH"
+- **WSL**: The `code` command may not be available. Use manual extension installation or switch to native VS Code
+- **Cursor**: The `code` command is not available. Use VSIX file installation method (see Platform Differences)
+
+### Extension installation fails
+
+- Ensure you're using the correct profile name (case-sensitive)
+- Verify the profile exists in VS Code: Check bottom-left corner for profile name
+- For Cursor users: Use VSIX file installation method instead of `make install-extensions`
+- Check that `.build/<profile>-extensions.list` exists (run `make base` or `make role role=<name>` first)
+
+### Profile not found
+
+- Create the profile in VS Code UI first: Command Palette → "Profiles: Create Profile"
+- Ensure the profile name matches exactly (case-sensitive)
+- Switch to the profile before running `make install-extensions`
+
+### Python script execution errors
+
+- Verify Python 3.8+ is installed: `python --version` or `python3 --version`
+- Check script permissions: Scripts should be executable (`chmod +x scripts/*.py` on Unix)
+- For `typing_extensions` import warnings: Install with `pip install typing_extensions` (optional but recommended)
+- Ensure scripts are run from the repository root directory
